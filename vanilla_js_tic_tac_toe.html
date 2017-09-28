@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 
+	* Handle the click you set the HTML of the node, and that gives you the behavior you want.
+	* So what's the issue?
+		*	How would you score/know when there's winner? How would you write the game logic?
+		* Need to look in the DOM (structure of the HTML) every single time when a new input/click occurs. A lot of processing power -> checkForWinner()
+
+	* Why this code is complete garbage
+		* How do you save (state of) the game if it's in middle of play? By saving the entire DOM, aka the entire html status. Lot of states that is just floating around.
+		* Hard to validate the input for the game logic (Can double click on a square that is already taken)
+	* Solution
+		Let's store the state as a js object and have what's called a rendering function, and the rendering function is pure function. Always gives consistent output based on the same input, aka the state. It's determinisitic.
+ -->
+<head>
+    <meta charset="UTF-8">
+    <title>Vanilla JS Tic-Tac-Toe</title>
+    <style type="text/css">
+    	.board {
+    		display: flex;
+    		width: 600px;
+    		height: 600px;
+    		flex-direction: row;
+    		flex-wrap: wrap;
+    		justify-content: flex-start;
+    	}
+
+    	.square {
+    		height: 200px;
+    		width: 200px;
+    		box-sizing: border-box;
+    		border: 5px solid black;
+    		/* X's and O's */
+    		font-size: 5em;
+    		display: flex;
+    		justify-content: center;
+    		align-items: center;
+    	}
+
+    	.square:hover {
+    		cursor: pointer;
+    		background-color: #80cd92;
+    	}
+    </style>
+</head>
+<body>
+		<div class="board">
+			<div class="square"></div>
+			<div class="square"></div>
+			<div class="square"></div>
+			<div class="square"></div>
+			<div class="square"></div>
+			<div class="square"></div>
+			<div class="square"></div>
+			<div class="square"></div>
+			<div class="square"></div>
+		</div>
+
+		<script type="text/javascript">
+			var PLAYER_ONE_SYMBOL = 'X'
+			var PLAYER_TWO_SYMBOL = 'O'
+			currentTurn = PLAYER_ONE_SYMBOL
+
+			var board = document.querySelector('.board')
+			board.addEventListener('click', function(event){
+				event.target.innerHTML = currentTurn
+				currentTurn = currentTurn === PLAYER_ONE_SYMBOL ? PLAYER_TWO_SYMBOL : PLAYER_ONE_SYMBOL
+				if (checkForWinner()) {
+					alert("Winner winner chicken dinner")
+				}
+			})
+
+			function checkForWinner() {
+				var squares = Array.prototype.slice.call(document.querySelectorAll('.square'), 0)
+				var symbols = squares.map(function(square) {
+					return square.innerHTML
+				})
+				console.log(symbols)
+				var winningCombos = [[0,1,2], [3,4,5], [6,7,8], [0,3,6],[1,4,7], [2,5,8], [0, 4, 8], [2,4,6]]
+				return winningCombos.find(function(combo){
+					console.log(combo)
+					if (symbols[combo[0]] == symbols[combo[1]] && symbols[combo[1]] == symbols[combo[2]]) {
+						return symbols[combo[0]]
+					} else {
+						return false
+					}
+				})
+
+			}
+		</script>
+</body>
+</html>
+
+
+
+
+
+
